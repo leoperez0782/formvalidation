@@ -137,7 +137,8 @@ class LoginPage extends StatelessWidget {
                 ),
                 hintText: 'ejemplo@correo.com',
                 labelText: 'Correo Electronico',
-                counterText: snapshot.data),
+                counterText: snapshot.data,
+                errorText: snapshot.error),
             onChanged: bloc.changeEmail,
           ),
         );
@@ -159,7 +160,8 @@ class LoginPage extends StatelessWidget {
                   color: Colors.deepPurple,
                 ),
                 labelText: 'Contraseña',
-                counterText: snapshot.data),
+                counterText: snapshot.data,
+                errorText: snapshot.error),
             onChanged: bloc.changePasword,
           ),
         );
