@@ -179,7 +179,7 @@ class LoginPage extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 20.0),
             child: Text('Ingresar'),
           ),
-          onPressed: snapshot.hasData ? () {} : null,
+          onPressed: snapshot.hasData ? () => _login(context, bloc) : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5.0),
           ),
@@ -189,5 +189,13 @@ class LoginPage extends StatelessWidget {
         );
       },
     );
+  }
+
+  _login(BuildContext context, LoginBloc bloc) {
+    print('=====================');
+    print('Email : ${bloc.email}');
+    print('Password : ${bloc.password}');
+    print('======================');
+    Navigator.pushReplacementNamed(context, 'home');
   }
 }
