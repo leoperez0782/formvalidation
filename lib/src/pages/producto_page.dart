@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:formvalidation/src/models/producto_model.dart';
 import 'package:formvalidation/src/providers/productos_provider.dart';
 import 'package:formvalidation/src/utils/utils.dart' as utils;
+import 'package:image_picker/image_picker.dart';
 
 class ProductoPage extends StatefulWidget {
   @override
@@ -15,6 +18,7 @@ class _ProductoPageState extends State<ProductoPage> {
   final productoProvider = ProductosProvider();
 
   bool _guardando = false;
+  File foto;
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +34,11 @@ class _ProductoPageState extends State<ProductoPage> {
         actions: [
           IconButton(
             icon: Icon(Icons.photo_size_select_actual),
-            onPressed: () {},
+            onPressed: _seleccionarFoto,
           ),
           IconButton(
             icon: Icon(Icons.camera_alt),
-            onPressed: () {},
+            onPressed: _tomarFoto,
           )
         ],
       ),
@@ -45,6 +49,7 @@ class _ProductoPageState extends State<ProductoPage> {
             key: formKey,
             child: Column(
               children: [
+                _mostrarFoto(),
                 _crearNombre(),
                 _crearPrecio(),
                 _crearDisponible(),
@@ -100,7 +105,7 @@ class _ProductoPageState extends State<ProductoPage> {
     );
   }
 
-  void _submit() {
+  void _submit() async {
     if (!formKey.currentState.validate()) return;
     formKey.currentState
         .save(); //Dispara el save de todos los textFields del form
@@ -108,6 +113,9 @@ class _ProductoPageState extends State<ProductoPage> {
     setState(() {
       _guardando = true;
     });
+    if (foto != null) {
+      producto.fotoUrl = await productoProvider.subirImagen(foto);
+    }
     if (producto.id == null) {
       productoProvider.crearProducto(producto);
     } else {
@@ -139,5 +147,44 @@ class _ProductoPageState extends State<ProductoPage> {
     );
 
     scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  void _tomarFoto() async {
+    _procesarImagen(ImageSource.camera);
+  }
+
+  void _seleccionarFoto() async {
+    _procesarImagen(ImageSource.gallery);
+  }
+
+  _procesarImagen(ImageSource origen) async {
+    foto = await ImagePicker.pickImage(source: origen);
+
+    if (foto != null) {
+      //limpieza
+    }
+
+    setState(() {});
+  }
+
+  Widget _mostrarFoto() {
+    if (producto.fotoUrl != null) {
+      //Todo: devolver imagen url
+      return Container();
+    } else {
+      // return Image(
+      //   image: AssetImage(foto?.path ?? 'assets/images/no-image.png'),
+      //   height: 300.0,
+      //   fit: BoxFit.cover,
+      // );
+      if (foto != null) {
+        return Image.file(
+          foto,
+          fit: BoxFit.cover,
+          height: 300.0,
+        );
+      }
+      return Image.asset('assets/images/no-image.png');
+    }
   }
 }
