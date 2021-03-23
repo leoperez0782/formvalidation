@@ -126,7 +126,8 @@ class _ProductoPageState extends State<ProductoPage> {
     //   _guardando = false;
     // });
     mostrarSnackBar('Registro guardado');
-    Navigator.pop(context);
+    //Navigator.pop(context);
+    Navigator.pushReplacementNamed(context, 'home');
   }
 
   Widget _crearDisponible() {
@@ -161,7 +162,7 @@ class _ProductoPageState extends State<ProductoPage> {
     foto = await ImagePicker.pickImage(source: origen);
 
     if (foto != null) {
-      //limpieza
+      producto.fotoUrl = null;
     }
 
     setState(() {});
@@ -170,7 +171,11 @@ class _ProductoPageState extends State<ProductoPage> {
   Widget _mostrarFoto() {
     if (producto.fotoUrl != null) {
       //Todo: devolver imagen url
-      return Container();
+      return FadeInImage(
+          image: NetworkImage(producto.fotoUrl),
+          placeholder: AssetImage('assets/images/jar-loading.gif'),
+          height: 300.0,
+          fit: BoxFit.contain);
     } else {
       // return Image(
       //   image: AssetImage(foto?.path ?? 'assets/images/no-image.png'),
