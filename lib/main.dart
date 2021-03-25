@@ -7,6 +7,7 @@ import 'package:formvalidation/src/pages/registro_page.dart';
 import 'package:formvalidation/src/preferencias_usuario/preferencias_usuario.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); //evita errores de inicializacion.
   final prefs = PreferenciasUsuario();
   await prefs.initPrefs();
   runApp(MyApp());
@@ -15,11 +16,12 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final prefs = PreferenciasUsuario();
     return Provider(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Material App',
-        initialRoute: 'login',
+        initialRoute: (prefs.token == '') ? 'login' : 'home',
         routes: {
           'login': (BuildContext context) => LoginPage(),
           'registro': (BuildContext context) => RegistroPage(),
